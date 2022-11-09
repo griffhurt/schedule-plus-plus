@@ -37,7 +37,7 @@ const ifr = document.getElementById("main_iframe").contentWindow;
 // const course_teachers = "cx-MuiGrid-root cx-MuiGrid-item cx-MuiGrid-grid-xs-12";
 // const course_elems = ifr.document.getElementsByClassName(course_teachers);
 
-const classInfo = ifr.document.getElementsByClassName("px-1 px-sm-3 pb-sm-3 px-lg-4 pb-lg-4");
+const classInfo = ifr.document.getElementsByClassName("cx-MuiPaper-root mb-2 mt-0 position-static cx-MuiPaper-elevation1 cx-MuiPaper-rounded");
 var instructorDictionary = new Object();
 console.log(classInfo);
 let c = 0;
@@ -45,9 +45,9 @@ let c = 0;
 
 
 Array.from(classInfo).forEach(element => {
-    console.log("asdfkjgha");
     // Get the actual internal content of the course
     const divName = element.className;
+    // piss off
     const classes = [];
     if(divName.includes("cx-MuiTypography-body2")) 
     {
