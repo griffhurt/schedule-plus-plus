@@ -12,11 +12,10 @@ window.setInterval(() => {
 
 // Identify page name
 function getPageName(doc) {
-    const headerObjs = doc.getElementsByTagName("h1")
-    for (let i = 0; i < headerObjs.length; i++) {
-        if (headerObjs[i].innerText.includes("Current page")) {
-            return headerObjs[i].innerText.split("\n")[1]
-        }
+    try {
+        return /[Cc]urrent [Pp]age\n(.+)\n/g.exec(doc.body.innerText)[1]
+    } catch (e) {
+        return null
     }
 }
 
