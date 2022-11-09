@@ -1,4 +1,14 @@
-const d = document.getElementById("main_iframe").contentWindow.document;
+window.setInterval(() => {
+    try {
+        const ifr = document.getElementById("main_iframe")
+        const d = ifr.contentWindow.document;
+        if (getPageName(d) === "Schedule") {
+            updateScheduleProfessors(d)
+        }
+    } finally {
+        ;
+    }
+}, 500)
 
 // Identify page name
 function getPageName(doc) {
