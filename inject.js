@@ -39,7 +39,7 @@ const ifr = document.getElementById("main_iframe").contentWindow;
 
 const classInfo = ifr.document.getElementsByClassName("cx-MuiPaper-root mb-2 mt-0 position-static cx-MuiPaper-elevation1 cx-MuiPaper-rounded");
 var instructorDictionary = new Object();
-console.log(classInfo);
+// console.log(classInfo);
 let c = 0;
 
 
@@ -47,25 +47,36 @@ let c = 0;
 Array.from(classInfo).forEach(element => {
     // Get the actual internal content of the course
     const divName = element.className;
+    console.log(element);
     // piss off
     const classes = [];
-    if(divName.includes("cx-MuiTypography-body2")) 
+    if(divName.includes("cx-MuiPaper-root mb-2 mt-0 position-static cx-MuiPaper-elevation1 cx-MuiPaper-rounded")) 
     {
-        const courseName = element.children
-        if(element.children[0])
-        {
-            classes.push(element.children[0].innerText.split("\n")[0]);
-        }
-        
+        Array.from(element).forEach(token => {
+            const tokenName = element.className;
+            if(tokenName.includes("cx-MuiTypography-root mr-2 cx-MuiTypography-body2"))
+            {
+                classes.push(element.children[0].innerText.split("\n")[0]);
+            }
+            if(tokenName.includes("cx-MuiGrid-root css-2c0klp er57yoh0 cx-MuiGrid-item cx-MuiGrid-grid-xs-12"))
+            {
+                const instructorName = element.children[0].innerText.split("\n")[0];
+                instructorDictionary[instructorName] = classes[c]
+                c++;   
+            }
+            console.log(classes);
+        })
     }
+    /*
     if(divName.includes("css"))
     {
         // we found the element
         const instructorName = element.children[0].innerText.split("\n")[0];
-        console.log(instructorName);
+        
         instructorDictionary[instructorName] = classes[c] // class they teach
         c++;
     }
+    */
     
 })
 console.log(instructorDictionary);
