@@ -10,8 +10,6 @@ function getPageName(doc) {
     }
 }
 
-//background: linear-gradient(to right, rgba(0,0,0,1) Percent%, rgba(0,0,0,0) Percent%);
-
 function nthParent(elem, n) {
     for (let i = 0; i < n; i++) {
         elem = elem.parentNode;
@@ -26,7 +24,7 @@ function traverseChildren(elem, childrenList) {
     return elem;
 }
 
-function createStarElement(doc, stars, professorId) {
+function createStarElement(doc, stars) {
     const mainDiv = doc.createElement("div");
     // Configure flex
     mainDiv.style.display = "flex";
@@ -52,10 +50,102 @@ function createStarElement(doc, stars, professorId) {
     num.style.fontFamily = "sans-serif"
     num.style.fontSize = "0.8rem"
     mainDiv.appendChild(num)
+    mainDiv.classList.add("spp-stars")
+    return mainDiv
+}
+
+function createDetailedStarElement(
+    doc,
+    profId,
+    overallQuality,
+    overallDifficulty, 
+    classQuality = null,
+    classDifficulty = null
+) {
+    const mainDiv = doc.createElement("div")
+    mainDiv.style.fontFamily = "sans-serif"
+
+    if (classQuality !== null) {
+        const classDiv = doc.createElement("div")
+        // Create the label for the course specific data
+        const classLabel = doc.createElement("div")
+        classLabel.innerText = "Course:"
+        classLabel.style.fontSize = "0.9rem"
+        classDiv.appendChild(classLabel)
+
+        // Inner div with flex
+        const classInnerDiv = doc.createElement("div")
+        classInnerDiv.style.display = "flex"
+
+        const classQualityDiv = doc.createElement("div")
+        // Quality label for class
+        const classQualityLabel = doc.createElement("div")
+        classQualityLabel.innerText = "Quality:"
+        classQualityLabel.style.fontSize = "0.8rem"
+        classQualityDiv.appendChild(classQualityLabel)
+        // Quality stars for class
+        const classQualityElem = createStarElement(doc, classQuality)
+        classQualityDiv.appendChild(classQualityElem)
+        classInnerDiv.appendChild(classQualityDiv)
+
+        const classDifficultyDiv = doc.createElement("div")
+        // Difficulty label for class
+        const classDifficultyLabel = doc.createElement("div")
+        classDifficultyLabel.innerText = "Difficulty:"
+        classDifficultyLabel.style.fontSize = "0.8rem"
+        classDifficultyDiv.appendChild(classDifficultyLabel)
+        // Difficulty stars for class
+        const classDifficultyElem = createStarElement(doc, classDifficulty)
+        classDifficultyDiv.appendChild(classDifficultyElem)
+        // Add a left margin
+        classDifficultyDiv.style.marginLeft = "10px"
+        // Add it to the main div
+        classInnerDiv.append(classDifficultyDiv)
+
+        classDiv.appendChild(classInnerDiv)
+        mainDiv.appendChild(classDiv)
+    }
+
+    const overallDiv = doc.createElement("div")
+    // Check if we need to add an overall label
+    if (classQuality !== null) {
+        const overallLabel = doc.createElement("div")
+        overallLabel.innerText = "Overall:"
+        overallLabel.style.fontSize = "0.9rem"
+        overallDiv.appendChild(overallLabel)
+    }
+    const overallInnerDiv = doc.createElement("div")
+    overallInnerDiv.style.display = "flex"
+
+    const overallQualityDiv = doc.createElement("div")
+    // Quality label for overall
+    const overallQualityLabel = doc.createElement("div")
+    overallQualityLabel.innerText = "Quality:"
+    overallQualityLabel.style.fontSize = "0.8rem"
+    overallQualityDiv.appendChild(overallQualityLabel)
+    // Quality stars for overall
+    const overallQualityElem = createStarElement(doc, overallQuality)
+    overallQualityDiv.appendChild(overallQualityElem)
+    overallInnerDiv.appendChild(overallQualityDiv)
+    
+    const overallDifficultyDiv = doc.createElement("div")
+    // Difficulty label for overall
+    const overallDifficultyLabel = doc.createElement("div")
+    overallDifficultyLabel.innerText = "Difficulty:"
+    overallDifficultyLabel.style.fontSize = "0.8rem"
+    overallDifficultyDiv.appendChild(overallDifficultyLabel)
+    // Difficulty stars for overall
+    const overallDifficultyElem = createStarElement(doc, overallDifficulty)
+    overallDifficultyDiv.appendChild(overallDifficultyElem)
+    // Add overall to main div
+    overallDifficultyDiv.style.marginLeft = "10px"
+    overallInnerDiv.appendChild(overallDifficultyDiv)
+    overallDiv.appendChild(overallInnerDiv)
+    mainDiv.appendChild(overallDiv)
 
     const mainLink = doc.createElement("a")
     mainLink.style.all = "unset"
-    mainLink.href = `https://www.ratemyprofessors.com/professor?tid=${professorId}`
+    mainLink.href = `https://www.ratemyprofessors.com/professor?tid=${profId}`
     mainLink.target = "_top"
     mainLink.style.cursor = "pointer"
     mainLink.classList.add("spp-stars")
@@ -79,7 +169,7 @@ function updateScheduleProfessors(doc) {
         
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
             const numStars = getProfessorStars(profName, courseName)
-            const stars = createStarElement(doc, numStars, 9342);
+            const stars = createStarElement(doc, numStars);
             profElem.appendChild(stars)
         }
 
@@ -89,11 +179,11 @@ function updateScheduleProfessors(doc) {
             if (traverseChildren(elem, [0]).innerText.toLowerCase() == "details") {
                 const profElem2 = traverseChildren(elem, [2])
                 if (profElem2.getElementsByClassName("spp-stars").length < 1) {
-                    const numStars = getProfessorStars(profName, courseName)
-                    const stars2 = createStarElement(doc, numStars, 9342);
+                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
                     profElem2.appendChild(stars2)
                 }
             }
         })
     })
 }
+
