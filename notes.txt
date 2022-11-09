@@ -1,0 +1,5 @@
+const d = document.getElementById("main_iframe").contentWindow.document
+
+document.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    elem.style.backgroundColor = 'red'
+})
