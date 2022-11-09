@@ -197,3 +197,23 @@ function updateScheduleProfessors(doc) {
     })
 }
 
+function updateCourseCatalogProfessors(doc) {
+    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+        const professorElem = traverseChildren(elem, [0, 6, 0, 0 ]);
+        if (professorElem.getElementsByClassName("spp-stars").length < 1) {
+            const starElem = createStarElement(doc, 4.3);
+            professorElem.appendChild(starElem);
+        }
+
+        const infoBlocks = nthParent(professorElem, 7).getElementsByTagName("dl");
+        Array.from(infoBlocks).forEach(elem2 => {
+            if (elem2.innerText.includes("Instructor:")) {
+                const profDetailed = traverseChildren(elem2, [0, 0, 1])
+                if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
+                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
+                    profDetailed.appendChild(stars2)
+                }
+            }
+        })
+    })
+}
