@@ -18,14 +18,15 @@ window.setInterval(() => {
     }
 }, 500)
 
-function getPageName(doc) {
-    try {
-        return /[Cc]urrent [Pp]age\n(.+)\n/g.exec(doc.body.innerText)[1]
-    } catch (e) {
-        return null
-    }
-}
 
+// HTML Traversal Helper Functions
+
+/**
+ * Returns the nth parent element of a node.
+ * @param {Node} elem The element being explored
+ * @param {Number} n The number of parents to go up
+ * @returns {Node} The nth parent node of the element
+ */
 function nthParent(elem, n) {
     for (let i = 0; i < n; i++) {
         elem = elem.parentNode;
@@ -33,6 +34,12 @@ function nthParent(elem, n) {
     return elem;
 }
 
+/**
+ * Returns a child of the element based on the indices given in childrenList.
+ * @param {Node} elem The element being traversed
+ * @param {Number[]} childrenList List of indices of children to traverse
+ * @returns {Node} The child element
+ */
 function traverseChildren(elem, childrenList) {
     for (let i = 0; i < childrenList.length; i++) {
         elem = elem.children[childrenList[i]]
@@ -40,6 +47,14 @@ function traverseChildren(elem, childrenList) {
     return elem;
 }
 
+// HTML Element Creation 
+
+/**
+ * Creates an HTML element with the stars and text stating how many stars
+ * @param {Document} doc The document of the page
+ * @param {Number} stars The number of stars to show in the element
+ * @returns {Node} The crafted stars element
+ */
 function createStarElement(doc, stars) {
     const mainDiv = doc.createElement("div");
     // Configure flex
@@ -71,6 +86,16 @@ function createStarElement(doc, stars) {
     return mainDiv
 }
 
+/**
+ * Creates a more detailed stars element for a professor
+ * @param {Document} doc The document of the page
+ * @param {Number} profId The RMP ID of the professor
+ * @param {Number} overallQuality The overall quality rating of the professor
+ * @param {Number} overallDifficulty The overall difficulty rating of the professor
+ * @param {Number} [classQuality] The professor's quality for this class
+ * @param {Number} [classDifficulty] The professor's difficulty for this class
+ * @returns {Node} The detailed star element
+ */
 function createDetailedStarElement(
     doc,
     profId,
@@ -171,10 +196,30 @@ function createDetailedStarElement(
     return mainLink
 }
 
+// API Functions
+
 function getProfessorStars(profName, className) {
     return 4.6
 }
 
+// Page Specific Functions
+/**
+ * Returns the name of the page in peoplesoft
+ * @param {Document} doc 
+ * @returns {(String | null)}
+ */
+function getPageName(doc) {
+    try {
+        return /[Cc]urrent [Pp]age\n(.+)\n/g.exec(doc.body.innerText)[1]
+    } catch (e) {
+        return null
+    }
+}
+
+/**
+ * Updates the professors with stars on the schedule page
+ * @param {Document} doc The document of the page
+ */
 function updateScheduleProfessors(doc) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const courseElem = traverseChildren(elem, [0, 0, 0, 0])
@@ -203,6 +248,10 @@ function updateScheduleProfessors(doc) {
     })
 }
 
+/**
+ * Updates professors with stars on pages in the course catalog
+ * @param {Document} doc The document of the page
+ */
 function updateCourseCatalogProfessors(doc) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const professorElem = traverseChildren(elem, [0, 6, 0, 0 ]);
