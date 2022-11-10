@@ -13,7 +13,7 @@ window.setInterval(() => {
             const subjectNumber = mat[2]
             updateCourseCatalogProfessors(d)
         }
-    } finally {
+    } catch (e) {
         ;
     }
 }, 500)
