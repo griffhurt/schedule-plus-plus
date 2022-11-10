@@ -2,15 +2,22 @@ window.setInterval(() => {
     try {
         const ifr = document.getElementById("main_iframe")
         const d = ifr.contentWindow.document;
+        // Checking if on the schedule page
         if (getPageName(d) === "Schedule") {
             updateScheduleProfessors(d)
+        // Checking if in the course catalogue
+        } else if (getPageName(d).match(/([A-Z]+) (\d{4}) - (.+)/g)) {
+            // Get the name of the subject
+            const mat = getPageName(d).match(/([A-Z]+) (\d{4}) - (.+)/g)
+            const subjectName = mat[1]
+            const subjectNumber = mat[2]
+            updateCourseCatalogProfessors(d)
         }
     } finally {
         ;
     }
 }, 500)
 
-// Identify page name
 function getPageName(doc) {
     try {
         return /[Cc]urrent [Pp]age\n(.+)\n/g.exec(doc.body.innerText)[1]
@@ -168,7 +175,6 @@ function getProfessorStars(profName, className) {
     return 4.6
 }
 
-// 
 function updateScheduleProfessors(doc) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const courseElem = traverseChildren(elem, [0, 0, 0, 0])
