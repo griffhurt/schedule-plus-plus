@@ -8,10 +8,10 @@ window.setInterval(() => {
         // Checking if in the course catalogue
         } else if (getPageName(d).match(/([A-Z]+) (\d{4}) - (.+)/g)) {
             // Get the name of the subject
-            const mat = getPageName(d).match(/([A-Z]+) (\d{4}) - (.+)/g)
-            const subjectName = mat[1]
-            const subjectNumber = mat[2]
-            updateCourseCatalogProfessors(d)
+            const mat = getPageName(d).match(/([A-Z]+) (\d{4}) - (.+)/)
+            const subjectName = mat[1].toUpperCase()
+            const subjectNumber = parseInt(mat[2])
+            updateCourseCatalogProfessors(d, subjectName, subjectNumber)
         } else if (getPageName(d) === "Class Search") {
             // updateCourseSearchProfessors(d)
         }
@@ -339,11 +339,23 @@ function updateScheduleProfessors(doc) {
  * Updates professors with stars on pages in the course catalog
  * @param {Document} doc The document of the page
  */
-function updateCourseCatalogProfessors(doc) {
+function updateCourseCatalogProfessors(doc, courseName, courseNum) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const professorElem = traverseChildren(elem, [0, 6, 0, 0 ]);
+        const profName = professorElem.innerText;
+        const profNameParsed = parseProfessorName(profName)
+        
+        // Ensure we can parse the prof's name
+        if (!profNameParsed) {
+            return
+        }
+
+        // Holder for prof data
+        let profData = null;
+
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
-            const starElem = createStarElement(doc, 4.3);
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+            const starElem = createStarElement(doc, profData.overall.quality);
             professorElem.appendChild(starElem);
         }
 
@@ -352,7 +364,16 @@ function updateCourseCatalogProfessors(doc) {
             if (elem2.innerText.includes("Instructor:")) {
                 const profDetailed = traverseChildren(elem2, [0, 0, 1])
                 if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
-                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
+                    if (!profData) {
+                        profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+                    }
+                    // Holder variable for stars2
+                    let stars2 = null;
+                    if (profData.course.data) {
+                        stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                    } else {
+                        stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                    }
                     profDetailed.appendChild(stars2)
                 }
             }
