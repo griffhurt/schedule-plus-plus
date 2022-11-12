@@ -229,12 +229,38 @@ function getProfessorStars(profName, className) {
     return 4.6
 }
 
-// Course name helper functions
+// String helper functions
+
+/**
+ * Parses the name of a course
+ * @param {String} courseName 
+ * @returns {Array} The course name followed by the course number
+ */
 function parseCourseName(courseName) {
     const m = /([A-Z]+) (\d{4})/.match(courseName)
     if (m) {
         return [m[1].toUpperCase(), parseInt(m[2])]
     }
+}
+
+/**
+ * Returns 
+ * @param {String} profName 
+ * @returns {String[] | null} The first name of the professor followed by the last name
+ */
+function parseProfessorName(profName) {
+    // Check for "To be Announced" and "Staff"
+    if (profName.toLowerCase() == "to be announced" || profName.toLowerCase() == "staff") {
+        return null
+    }
+    // Match the name of the professor
+    const m = profName.split(" ")
+    for (let elem of m) {
+        if (!elem.match(/[A-Za-z]+/)) {
+            return null
+        }
+    }
+    return [m[0].toLowerCase(), m[m.length - 1].toLowerCase()]
 }
 
 // Page Specific Functions
