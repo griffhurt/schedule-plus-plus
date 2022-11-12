@@ -20,6 +20,30 @@ window.setInterval(() => {
     }
 }, 500)
 
+// API function
+
+/**
+ * Retrieves information about the professor and course from RMP
+ * CURRENTLY A STAND-IN
+ * @param {String} firstName The professor's first name
+ * @param {String} lastName The professor's last name
+ * @param {String} courseName The course's name (ex. CS or MUSIC)
+ * @param {Number} courseNum The course's number (ex. 441 or 1443)
+ * @returns {Object} Information about the overall and course ratings
+ */
+function getProfessorStars(firstName, lastName, courseName, courseNum) {
+    return {
+        overall: {
+            difficulty: Math.random() * 5,
+            quality: Math.random() * 5
+        },
+        course: {
+            data: true,
+            difficulty: Math.random() * 5,
+            quality: Math.random() * 5
+        }
+    }
+}
 
 // HTML Traversal Helper Functions
 
