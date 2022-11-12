@@ -229,6 +229,14 @@ function getProfessorStars(profName, className) {
     return 4.6
 }
 
+// Course name helper functions
+function parseCourseName(courseName) {
+    const m = /([A-Z]+) (\d{4})/.match(courseName)
+    if (m) {
+        return [m[1].toUpperCase(), parseInt(m[2])]
+    }
+}
+
 // Page Specific Functions
 /**
  * Returns the name of the page in peoplesoft
