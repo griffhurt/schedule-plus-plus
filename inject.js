@@ -250,13 +250,13 @@ function parseCourseName(courseName) {
  * @returns {String[] | null} The first name of the professor followed by the last name
  */
 function parseProfessorName(profName) {
-    // Check for "To be Announced" and "Staff"
-    if (profName.toLowerCase() == "to be announced" || profName.toLowerCase() == "staff") {
-        return null
-    }
     // Strip off newlines if necessary
     if (profName.includes("\n")) {
         profName = profName.split("\n")[0]
+    }
+    // Check for "To be Announced" and "Staff"
+    if (profName.toLowerCase() == "to be announced" || profName.toLowerCase() == "staff") {
+        return null
     }
     const m = profName.split(" ")
     for (let elem of m) {
