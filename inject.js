@@ -31,7 +31,8 @@ window.setInterval(() => {
  * @param {Number} courseNum The course's number (ex. 441 or 1443)
  * @returns {Object} Information about the overall and course ratings
  */
-function getProfessorStars(firstName, lastName, courseName, courseNum) {
+function getProfessorData(firstName, lastName, courseName, courseNum) {
+    console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
     return {
         id: Math.floor(Math.random() * 10000),
         overall: {
@@ -237,7 +238,7 @@ function getProfessorStars(profName, className) {
  * @returns {Array} The course name followed by the course number
  */
 function parseCourseName(courseName) {
-    const m = /([A-Z]+) (\d{4})/.match(courseName)
+    const m = courseName.match(/([A-Z]+) (\d{4})/)
     if (m) {
         return [m[1].toUpperCase(), parseInt(m[2])]
     }
@@ -253,9 +254,13 @@ function parseProfessorName(profName) {
     if (profName.toLowerCase() == "to be announced" || profName.toLowerCase() == "staff") {
         return null
     }
-    // Match the name of the professor
+    // Strip off newlines if necessary
+    if (profName.includes("\n")) {
+        profName = profName.split("\n")[0]
+    }
     const m = profName.split(" ")
     for (let elem of m) {
+        // Ensure all elements are words
         if (!elem.match(/[A-Za-z]+/)) {
             return null
         }
@@ -287,11 +292,21 @@ function updateScheduleProfessors(doc) {
         const profElem = traverseChildren(elem, [0, 0, 0, 2, 0, 0, 0])
 
         const courseName = traverseChildren(courseElem, [0, 0, 0]).innerText;
+        const courseNameParsed = parseCourseName(courseName)
         const profName = profElem.innerText;
+        const profNameParsed = parseProfessorName(profName)
         
+        // Die out if we can't get the prof's name or the course name
+        if (!profNameParsed || !courseNameParsed) {
+            return
+        }
+
+        // Holder for professor data
+        let profData = null;
+
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
-            const numStars = getProfessorStars(profName, courseName)
-            const stars = createStarElement(doc, numStars);
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            const stars = createStarElement(doc, profData.overall.quality);
             profElem.appendChild(stars)
         }
 
@@ -301,7 +316,18 @@ function updateScheduleProfessors(doc) {
             if (traverseChildren(elem, [0]).innerText.toLowerCase() == "details") {
                 const profElem2 = traverseChildren(elem, [2])
                 if (profElem2.getElementsByClassName("spp-stars").length < 1) {
-                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
+                    // Holder variable for stars2
+                    let stars2 = null;
+                    // Check if we have the prof data yet
+                    if (!profData) {
+                        profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    }
+                    // Check to see if we have course data or not
+                    if (!profData.course.data) {
+                        stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                    } else {
+                        stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty)
+                    }
                     profElem2.appendChild(stars2)
                 }
             }
