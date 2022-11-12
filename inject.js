@@ -33,6 +33,7 @@ window.setInterval(() => {
  */
 function getProfessorStars(firstName, lastName, courseName, courseNum) {
     return {
+        id: Math.floor(Math.random() * 10000),
         overall: {
             difficulty: Math.random() * 5,
             quality: Math.random() * 5
