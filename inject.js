@@ -12,6 +12,8 @@ window.setInterval(() => {
             const subjectName = mat[1]
             const subjectNumber = mat[2]
             updateCourseCatalogProfessors(d)
+        } else if (getPageName(d) === "Class Search") {
+            // updateCourseSearchProfessors(d)
         }
     } catch (e) {
         ;
@@ -270,5 +272,34 @@ function updateCourseCatalogProfessors(doc) {
                 }
             }
         })
+    })
+}
+
+function updateCourseSearchProfessors(doc) {
+    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+        const professorElem = traverseChildren(elem, [0, 1, 0, 3, 0, 0, 0, 4]);
+        if (professorElem.getElementsByClassName("spp-stars").length < 1) {
+            const starElem = createStarElement(doc, 4.3);
+            const externalDiv = doc.createElement("div")
+            // Replace the child with the external div
+            professorElem.parentElement.replaceChild(externalDiv, professorElem)
+            professorElem.className = "";
+            professorElem.removeAttribute('style');
+            externalDiv.appendChild(professorElem)
+            externalDiv.appendChild(starElem)
+        }
+
+        /*
+        const infoBlocks = nthParent(professorElem, 7).getElementsByTagName("dl");
+        Array.from(infoBlocks).forEach(elem2 => {
+            if (elem2.innerText.includes("Instructor:")) {
+                const profDetailed = traverseChildren(elem2, [0, 0, 1])
+                if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
+                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
+                    profDetailed.appendChild(stars2)
+                }
+            }
+        })
+        */
     })
 }
