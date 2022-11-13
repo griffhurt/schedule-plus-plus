@@ -16,6 +16,8 @@ window.setInterval(() => {
             updateCourseSearchProfessors(d)
         } else if (getPageName(d) === "Shopping Cart") {
             updateShoppingCart(d)
+        } else if (getPageName(d) === "Edit Enrollment") {
+            updateEditEnrollment(d)
         }
     } catch (e) {
         ;
