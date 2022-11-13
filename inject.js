@@ -18,6 +18,8 @@ window.setInterval(() => {
             updateShoppingCart(d)
         } else if (getPageName(d) === "Edit Enrollment") {
             updateEditEnrollment(d)
+        } else if (getPageName(d) === "Drop Classes") {
+            updateDropClasses(d)
         }
     } catch (e) {
         ;
