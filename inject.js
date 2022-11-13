@@ -604,3 +604,58 @@ function updateDropClasses(doc) {
         }
     })
 }
+
+function updateSBSelectSections(doc) {
+    // Get the header
+    const headerElem = doc.getElementsByTagName("h2")[0]
+    const courseName = headerElem.innerText.split(" -")[0]
+    const courseNameParsed = parseCourseName(courseName)
+
+    // Find the horizontal break on the page
+    const hrElem = doc.getElementsByTagName("hr")[0]
+    const sectionsListElem = nthParent(hrElem, 4)
+    // Get the courses
+    const coursesElem = traverseChildren(sectionsListElem, [1, 0])
+
+    Array.from(coursesElem.childNodes).forEach(elem => {
+        const profElem = traverseChildren(elem, [0, 0, 0, 0, 5, 0, 0])
+        const profName = profElem.innerText
+        const profNameParsed = parseProfessorName(profName)
+        
+        // Holder variable for professor data
+        let profData = null;
+        
+        if (profElem.getElementsByClassName("spp-stars").length < 1) {
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+
+            const starElem = createStarElement(doc, profData.overall.quality);
+            const externalDiv = doc.createElement("div")
+            // Replace the child with the external div
+            profElem.parentElement.replaceChild(externalDiv, profElem)
+            profElem.className = "";
+            profElem.removeAttribute('style');
+            externalDiv.className = "cx-MuiGrid-root px-1 css-t8n52r cx-MuiGrid-item cx-MuiGrid-zeroMinWidth cx-MuiGrid-grid-xs-4"
+            externalDiv.appendChild(profElem)
+            externalDiv.appendChild(starElem)
+        }
+
+        const courseCollapseElem = traverseChildren(elem, [0, 1, 0, 0, 0])
+        // Checking to see if the collapse is down
+        if (courseCollapseElem.childElementCount > 0) {
+            const profDetailsElem = traverseChildren(courseCollapseElem, [0, 0, 1, 0, 2])
+            if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
+                if (!profData) {
+                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                }
+                // Create the stars
+                let stars2 = null;
+                if (profData.course.data) {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                } else {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                }
+                profDetailsElem.appendChild(stars2)
+            }
+        }
+    })
+}
