@@ -510,3 +510,34 @@ function updateShoppingCart(doc) {
 
     })
 }
+
+function updateEditEnrollment(doc) {
+    const hrElem = doc.getElementsByTagName("hr")[0]
+    const overallElem = nthParent(hrElem, 2)
+
+    Array.from(overallElem.childNodes).slice(2).forEach(elem => {
+        const rowElem = traverseChildren(elem, [0, 0, 0])
+
+        const profElem = traverseChildren(rowElem, [2, 0, 3])
+        const profName = profElem.innerText
+        const profNameParsed = parseProfessorName(profName)
+
+        const courseElem = traverseChildren(rowElem, [0, 0])
+        const courseName = courseElem.innerText
+        const courseNameParsed = parseCourseName(courseName)
+
+        if (profElem.getElementsByClassName("spp-stars").length < 1) {
+            const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            
+            const starElem = createStarElement(doc, profData.overall.quality);
+            const externalDiv = doc.createElement("div")
+            
+            // Replace the child with the external div
+            profElem.parentElement.replaceChild(externalDiv, profElem)
+            profElem.className = "";
+            profElem.removeAttribute('style');
+            externalDiv.appendChild(profElem)
+            externalDiv.appendChild(starElem)
+        }
+    })
+}
