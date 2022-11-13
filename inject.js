@@ -13,7 +13,7 @@ window.setInterval(() => {
             const subjectNumber = parseInt(mat[2])
             updateCourseCatalogProfessors(d, subjectName, subjectNumber)
         } else if (getPageName(d) === "Class Search") {
-            // updateCourseSearchProfessors(d)
+            updateCourseSearchProfessors(d)
         }
     } catch (e) {
         ;
