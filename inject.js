@@ -665,3 +665,49 @@ function updateSBSelectSections(doc) {
         }
     })
 }
+
+function updateSBSchedules(doc) {
+    // Check to make sure the dialogue box is open
+    const dialogueElems = doc.getElementsByClassName("cx-MuiDialog-container")
+    if (dialogueElems.length > 0) {
+        // Get the name of the course
+        const courseNameElem = dialogueElems[0].getElementsByTagName("h1")[0]
+        const courseName = courseNameElem.innerText;
+        const courseNameParsed = parseCourseName(courseName)
+
+        let instructorLabelElems = [];
+        for (let elem of dialogueElems[0].getElementsByTagName("dt")) {
+            if (elem.innerText.includes("Instructor")) {
+                instructorLabelElems.push(elem);
+            }
+        }
+        // Checking to make sure we got the elements
+        if (instructorLabelElems.length == 0) {
+            return
+        }
+        instructorLabelElems.forEach(elem => {
+            const profElem = elem.parentNode.childNodes[1]
+            const profName = profElem.innerText
+            const profNameParsed = parseProfessorName(profName)
+
+            const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+
+            let starElem = null;
+            if (profData.course.data) {
+                starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+            } else {
+                starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+            }
+
+            const externalDiv = doc.createElement("div")
+            
+            // Replace the child with the external div
+            profElem.parentElement.replaceChild(externalDiv, profElem)
+            profElem.className = "";
+            profElem.removeAttribute('style');
+            profElem.style.marginInlineStart = "0";
+            externalDiv.appendChild(profElem)
+            externalDiv.appendChild(starElem)
+        });
+    }
+}
