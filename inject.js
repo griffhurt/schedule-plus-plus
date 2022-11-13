@@ -251,6 +251,18 @@ function createDetailedStarElement(
     return mainLink
 }
 
+/**
+ * Creates a blank element with spp-stars class so that server doesn't keep rendering
+ * @param {Document} doc 
+ * @returns A blank element with class spp-stars
+ */
+function starBlankOut(doc) {
+    const mainDiv = doc.createElement("div")
+    mainDiv.classList.add("spp-stars")
+    mainDiv.style.display = 'none';
+    return mainDiv
+}
+
 // API Functions
 
 function getProfessorStars(profName, className) {
