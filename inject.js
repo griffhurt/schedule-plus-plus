@@ -92,14 +92,24 @@ function createStarElement(doc, stars) {
     for (let i = 0; i < Math.floor(stars); i++) {
         const s = doc.createElement("div")
         s.innerText = "★";
-        s.style.color = "#003594";
+        if(stars > 2.5) {
+            s.style.color = "#003594";
+        }
+        else {
+            s.style.color = "#e01a04";
+        }
         mainDiv.appendChild(s);
     }
     // Add the partial star
     const percent = Math.round((stars - Math.floor(stars)) * 100);
     if (percent > 0) {
         const partialStar = doc.createElement("div")
-        partialStar.style.cssText = `background: linear-gradient(to right, rgba(0,53,148,1) ${percent}%, rgba(0,53,148,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+        if(stars > 2.5) {
+            partialStar.style.cssText = `background: linear-gradient(to right, rgba(0,53,148,1) ${percent}%, rgba(0,53,148,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+        }
+        else {
+            partialStar.style.cssText = `background: linear-gradient(to right, rgba(224,26,4,1) ${percent}%, rgba(224,26,4,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+        }
         partialStar.innerText = "★";
         mainDiv.appendChild(partialStar)
     }
