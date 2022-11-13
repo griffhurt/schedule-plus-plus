@@ -47,6 +47,9 @@ window.setInterval(() => {
  */
 function getProfessorData(firstName, lastName, courseName, courseNum) {
     console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
+    if (Math.random() > 0.5) {
+        return null
+    }
     return {
         id: Math.floor(Math.random() * 10000),
         overall: {
@@ -334,6 +337,10 @@ function updateScheduleProfessors(doc) {
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            // Error in request
+            if (!profData) {
+                return
+            }
             const stars = createStarElement(doc, profData.overall.quality);
             profElem.appendChild(stars)
         }
@@ -349,6 +356,9 @@ function updateScheduleProfessors(doc) {
                     // Check if we have the prof data yet
                     if (!profData) {
                         profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                        if (!profData) {
+                            return
+                        }
                     }
                     // Check to see if we have course data or not
                     if (!profData.course.data) {
@@ -383,6 +393,9 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+            if (!profData) {
+                return
+            }
             const starElem = createStarElement(doc, profData.overall.quality);
             professorElem.appendChild(starElem);
         }
@@ -394,6 +407,9 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
                 if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
                     if (!profData) {
                         profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+                        if (!profData) {
+                            return
+                        }
                     }
                     // Holder variable for stars2
                     let stars2 = null;
@@ -436,6 +452,9 @@ function updateCourseSearchProfessors(doc) {
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            if (!profData) {
+                return
+            }
 
             const starElem = createStarElement(doc, profData.overall.quality);
             const externalDiv = doc.createElement("div")
@@ -463,6 +482,9 @@ function updateCourseSearchProfessors(doc) {
             if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])   
+                    if (!profData) {
+                        return
+                    }
                 }
 
                 // Create the stars
@@ -494,6 +516,9 @@ function updateShoppingCart(doc) {
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            if (!profData) {
+                return
+            }
             const starElem = createStarElement(doc, profData.overall.quality);
             professorElem.appendChild(starElem)
         }
@@ -512,6 +537,9 @@ function updateShoppingCart(doc) {
             if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    if (!profData) {
+                        return
+                    }
                 }
                 // Create the stars
                 let stars2 = null;
@@ -544,6 +572,9 @@ function updateEditEnrollment(doc) {
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
             const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            if (!profData) {
+                return
+            }
             
             const starElem = createStarElement(doc, profData.overall.quality);
             const externalDiv = doc.createElement("div")
@@ -576,7 +607,10 @@ function updateDropClasses(doc) {
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
-            
+            if (!profData) {
+                return
+            }
+
             const starElem = createStarElement(doc, profData.overall.quality);
             const externalDiv = doc.createElement("div")
             
@@ -603,6 +637,9 @@ function updateDropClasses(doc) {
             if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    if (!profData) {
+                        return
+                    }
                 }
                 // Create the stars
                 let stars2 = null;
@@ -639,6 +676,9 @@ function updateSBSelectSections(doc) {
         
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            if (!profData) {
+                return
+            }
 
             const starElem = createStarElement(doc, profData.overall.quality);
             const externalDiv = doc.createElement("div")
@@ -658,6 +698,9 @@ function updateSBSelectSections(doc) {
             if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    if (!profData) {
+                        return
+                    }
                 }
                 // Create the stars
                 let stars2 = null;
@@ -697,6 +740,9 @@ function updateSBSchedules(doc) {
             const profNameParsed = parseProfessorName(profName)
 
             const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            if (!profData) {
+                return
+            }
 
             let starElem = null;
             if (profData.course.data) {
