@@ -382,10 +382,34 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
 }
 
 function updateCourseSearchProfessors(doc) {
+    // Get the name of the 
+    const h2Elem = doc.getElementsByTagName("h2")[0]
+    const h2SpanElem = h2Elem.getElementsByTagName("span")[0]
+    const courseNameParsed = parseCourseName(h2SpanElem.innerText.slice(3))
+
+    // Die out if course name not parsed correctly
+    if (!courseNameParsed) {
+        return
+    }
+
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const professorElem = traverseChildren(elem, [0, 1, 0, 3, 0, 0, 0, 4]);
+
+        const profName = professorElem.innerText
+        const profNameParsed = parseProfessorName(profName)
+
+        // Die out if professor name not parsed
+        if (!profNameParsed) {
+            return
+        }
+        
+        // Holder variable for professor data
+        let profData = null;
+
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
-            const starElem = createStarElement(doc, 4.3);
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+
+            const starElem = createStarElement(doc, profData.overall.quality);
             const externalDiv = doc.createElement("div")
             // Replace the child with the external div
             professorElem.parentElement.replaceChild(externalDiv, professorElem)
@@ -395,17 +419,33 @@ function updateCourseSearchProfessors(doc) {
             externalDiv.appendChild(starElem)
         }
 
-        /*
-        const infoBlocks = nthParent(professorElem, 7).getElementsByTagName("dl");
-        Array.from(infoBlocks).forEach(elem2 => {
+        const overallElem = nthParent(elem, 3)
+        let instructorLabelElem = null;
+
+        for (let elem2 of overallElem.getElementsByTagName("p")) {
             if (elem2.innerText.includes("Instructor:")) {
-                const profDetailed = traverseChildren(elem2, [0, 0, 1])
-                if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
-                    const stars2 = createDetailedStarElement(doc, 0, 4.3, 2.3, 1.2, 5.0);
-                    profDetailed.appendChild(stars2)
-                }
+                instructorLabelElem = elem2
+                break
             }
-        })
-        */
+        }
+        if (instructorLabelElem) {
+            
+            const detailsBlock = nthParent(instructorLabelElem, 2)
+            const profDetailsElem = traverseChildren(detailsBlock, [2])
+            if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
+                if (!profData) {
+                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])   
+                }
+
+                // Create the stars
+                let stars2 = null;
+                if (profData.course.data) {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                } else {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                }
+                profDetailsElem.appendChild(stars2)
+            }
+        }
     })
 }
