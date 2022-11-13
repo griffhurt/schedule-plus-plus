@@ -449,3 +449,52 @@ function updateCourseSearchProfessors(doc) {
         }
     })
 }
+
+function updateShoppingCart(doc) {
+    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+        const professorElem = traverseChildren(elem, [0, 3, 0, 3])
+        
+        const profName = professorElem.innerText
+        const profNameParsed = parseProfessorName(profName)
+
+        const courseElem = traverseChildren(elem, [0, 1, 0, 0, 0])
+        const courseName = courseElem.innerText
+        const courseNameParsed = parseCourseName(courseName)
+
+        // Holder variable for professor data
+        let profData = null;
+
+        if (professorElem.getElementsByClassName("spp-stars").length < 1) {
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            const starElem = createStarElement(doc, profData.overall.quality);
+            professorElem.appendChild(starElem)
+        }
+
+        const overallElem = nthParent(elem, 3)
+        let detailsLabelElem = null
+        for (let elem2 of overallElem.getElementsByTagName("h2")) {
+            if (elem2.innerText.includes("DETAILS")) {
+                detailsLabelElem = elem2
+                break
+            }
+        }
+        if (detailsLabelElem) {
+            const detailsBlockElem = nthParent(detailsLabelElem, 2)
+            const detailedInstructorElem = traverseChildren(detailsBlockElem, [2])
+            if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
+                if (!profData) {
+                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                }
+                // Create the stars
+                let stars2 = null;
+                if (profData.course.data) {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                } else {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                }
+                detailedInstructorElem.appendChild(stars2)
+            }
+        }
+
+    })
+}
