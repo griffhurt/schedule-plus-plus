@@ -543,3 +543,62 @@ function updateEditEnrollment(doc) {
         }
     })
 }
+
+function updateDropClasses(doc) {
+    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+        const profElem = traverseChildren(elem, [0, 2, 0, 4])
+        const profName = profElem.innerText
+        const profNameParsed = parseProfessorName(profName)
+
+        const courseElem = traverseChildren(elem, [0, 0])
+        const courseName = courseElem.innerText
+        const courseNameParsed = parseCourseName(courseName)
+
+        if (!profNameParsed | !courseNameParsed) {
+            return
+        }
+
+        let profData = null;
+
+        if (profElem.getElementsByClassName("spp-stars").length < 1) {
+            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            
+            const starElem = createStarElement(doc, profData.overall.quality);
+            const externalDiv = doc.createElement("div")
+            
+            // Replace the child with the external div
+            profElem.parentElement.replaceChild(externalDiv, profElem)
+            profElem.className = "";
+            profElem.removeAttribute('style');
+            externalDiv.appendChild(profElem)
+            externalDiv.appendChild(starElem)
+        }
+
+        const overallElem = nthParent(elem, 3)
+        let detailsLabelElem = null;
+        for (let elem2 of overallElem.getElementsByTagName("h3")) {
+            if (elem2.innerText.includes("DETAILS")) {
+                detailsLabelElem = elem2
+                break
+            }
+        }
+
+        if (detailsLabelElem) {
+            const detailsElem = nthParent(detailsLabelElem, 2)
+            const detailedInstructorElem = traverseChildren(detailsElem, [2])
+            if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
+                if (!profData) {
+                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                }
+                // Create the stars
+                let stars2 = null;
+                if (profData.course.data) {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                } else {
+                    stars2 = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                }
+                detailedInstructorElem.appendChild(stars2)
+            }
+        }
+    })
+}
