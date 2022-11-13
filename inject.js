@@ -263,12 +263,6 @@ function starBlankOut(doc) {
     return mainDiv
 }
 
-// API Functions
-
-function getProfessorStars(profName, className) {
-    return 4.6
-}
-
 // String helper functions
 
 /**
@@ -324,6 +318,8 @@ function getPageName(doc) {
         return null
     }
 }
+
+// Page Updater Functions
 
 /**
  * Updates the professors with stars on the schedule page
@@ -390,6 +386,8 @@ function updateScheduleProfessors(doc) {
 /**
  * Updates professors with stars on pages in the course catalog
  * @param {Document} doc The document of the page
+ * @param {String} courseName The name of the course
+ * @param {Number} courseNum The number of the course
  */
 function updateCourseCatalogProfessors(doc, courseName, courseNum) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
@@ -441,6 +439,10 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
     })
 }
 
+/**
+ * Updates the professors with stars on the course search page
+ * @param {Document} doc The page's document
+ */
 function updateCourseSearchProfessors(doc) {
     // Get the name of the 
     const h2Elem = doc.getElementsByTagName("h2")[0]
@@ -518,6 +520,10 @@ function updateCourseSearchProfessors(doc) {
     })
 }
 
+/**
+ * Updates the professors with stars on the shopping cart page
+ * @param {Document} doc 
+ */
 function updateShoppingCart(doc) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const professorElem = traverseChildren(elem, [0, 3, 0, 3])
@@ -575,6 +581,10 @@ function updateShoppingCart(doc) {
     })
 }
 
+/**
+ * Updates professors with stars on the edit enrollment page
+ * @param {Document} doc 
+ */
 function updateEditEnrollment(doc) {
     const hrElem = doc.getElementsByTagName("hr")[0]
     const overallElem = nthParent(hrElem, 2)
@@ -610,6 +620,10 @@ function updateEditEnrollment(doc) {
     })
 }
 
+/**
+ * Updates professors with stars on the drop classes page
+ * @param {Document} doc 
+ */
 function updateDropClasses(doc) {
     doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
         const profElem = traverseChildren(elem, [0, 2, 0, 4])
@@ -677,6 +691,10 @@ function updateDropClasses(doc) {
     })
 }
 
+/**
+ * Updates professors with stars on the schedule builder select sections page
+ * @param {Document} doc 
+ */
 function updateSBSelectSections(doc) {
     // Get the header
     const headerElem = doc.getElementsByTagName("h2")[0]
@@ -740,6 +758,10 @@ function updateSBSelectSections(doc) {
     })
 }
 
+/**
+ * Updates professors with stars on the schedule builder schedule and favorites page
+ * @param {Document} doc 
+ */
 function updateSBSchedules(doc) {
     // Check to make sure the dialogue box is open
     const dialogueElems = doc.getElementsByClassName("cx-MuiDialog-container")
