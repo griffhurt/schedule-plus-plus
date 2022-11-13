@@ -20,6 +20,8 @@ window.setInterval(() => {
             updateEditEnrollment(d)
         } else if (getPageName(d) === "Drop Classes") {
             updateDropClasses(d)
+        } else if (getPageName(d) === "Select Sections") {
+            updateSBSelectSections(d)
         }
     } catch (e) {
         ;
@@ -269,6 +271,10 @@ function parseProfessorName(profName) {
     // Strip off newlines if necessary
     if (profName.includes("\n")) {
         profName = profName.split("\n")[0]
+    }
+    // Strip off commas if necessary
+    if (profName.includes(",")) {
+        profName = profName.split(",")[0]
     }
     // Check for "To be Announced" and "Staff"
     if (profName.toLowerCase() == "to be announced" || profName.toLowerCase() == "staff") {
