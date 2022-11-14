@@ -98,9 +98,10 @@ function traverseChildren(elem, childrenList) {
  * Creates an HTML element with the stars and text stating how many stars
  * @param {Document} doc The document of the page
  * @param {Number} stars The number of stars to show in the element
+ * @param {Boolean} [difficulty] Whether this is difficulty stars and the color should be reversed
  * @returns {Node} The crafted stars element
  */
-function createStarElement(doc, stars) {
+function createStarElement(doc, stars, difficulty=false) {
     const mainDiv = doc.createElement("div");
     // Configure flex
     mainDiv.style.display = "flex";
@@ -109,11 +110,18 @@ function createStarElement(doc, stars) {
     for (let i = 0; i < Math.floor(stars); i++) {
         const s = doc.createElement("div")
         s.innerText = "★";
-        if(stars > 2.5) {
-            s.style.color = "#003594";
-        }
-        else {
-            s.style.color = "#e01a04";
+        if (difficulty) {
+            if (stars > 2.5) {
+                s.style.color = "#e01a04";
+            } else {
+                s.style.color = "#003594";
+            }
+        } else {
+            if (stars > 2.5) {
+                s.style.color = "#003594";
+            } else {
+                s.style.color = "#e01a04";
+            }
         }
         mainDiv.appendChild(s);
     }
@@ -121,16 +129,22 @@ function createStarElement(doc, stars) {
     const percent = Math.round((stars - Math.floor(stars)) * 100);
     if (percent > 0) {
         const partialStar = doc.createElement("div")
-        if(stars > 2.5) {
-            partialStar.style.cssText = `background: linear-gradient(to right, rgba(0,53,148,1) ${percent}%, rgba(0,53,148,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
-        }
-        else {
-            partialStar.style.cssText = `background: linear-gradient(to right, rgba(224,26,4,1) ${percent}%, rgba(224,26,4,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+        if (difficulty) {
+            if (stars > 2.5) {
+                partialStar.style.cssText = `background: linear-gradient(to right, rgba(224,26,4,1) ${percent}%, rgba(224,26,4,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+            } else {
+                partialStar.style.cssText = `background: linear-gradient(to right, rgba(0,53,148,1) ${percent}%, rgba(0,53,148,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+            }
+        } else {
+            if (stars > 2.5) {
+                partialStar.style.cssText = `background: linear-gradient(to right, rgba(0,53,148,1) ${percent}%, rgba(0,53,148,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+            } else {
+                partialStar.style.cssText = `background: linear-gradient(to right, rgba(224,26,4,1) ${percent}%, rgba(224,26,4,0) ${percent}%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;`
+            }
         }
         partialStar.innerText = "★";
         mainDiv.appendChild(partialStar)
     }
-
     // Add the number
     const num = doc.createElement("div")
     num.innerText = `(${stars.toFixed(2)})`
@@ -192,7 +206,7 @@ function createDetailedStarElement(
         classDifficultyLabel.style.fontSize = "0.8rem"
         classDifficultyDiv.appendChild(classDifficultyLabel)
         // Difficulty stars for class
-        const classDifficultyElem = createStarElement(doc, classDifficulty)
+        const classDifficultyElem = createStarElement(doc, classDifficulty, true)
         classDifficultyDiv.appendChild(classDifficultyElem)
         // Add a left margin
         classDifficultyDiv.style.marginLeft = "10px"
@@ -232,7 +246,7 @@ function createDetailedStarElement(
     overallDifficultyLabel.style.fontSize = "0.8rem"
     overallDifficultyDiv.appendChild(overallDifficultyLabel)
     // Difficulty stars for overall
-    const overallDifficultyElem = createStarElement(doc, overallDifficulty)
+    const overallDifficultyElem = createStarElement(doc, overallDifficulty, true)
     overallDifficultyDiv.appendChild(overallDifficultyElem)
     // Add overall to main div
     overallDifficultyDiv.style.marginLeft = "10px"
