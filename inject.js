@@ -45,7 +45,7 @@ window.setInterval(() => {
  * @param {Number} courseNum The course's number (ex. 441 or 1443)
  * @returns {Object} Information about the overall and course ratings
  */
-function getProfessorData(firstName, lastName, courseName, courseNum) {
+async function getProfessorData(firstName, lastName, courseName, courseNum) {
     console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
     if (Math.random() > 0.5) {
         return null
@@ -339,7 +339,7 @@ function getPageName(doc) {
  * Updates the professors with stars on the schedule page
  * @param {Document} doc The document of the page
  */
-function updateScheduleProfessors(doc) {
+async function updateScheduleProfessors(doc) {
     for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const courseElem = traverseChildren(elem, [0, 0, 0, 0])
         const profElem = traverseChildren(elem, [0, 0, 0, 2, 0, 0, 0])
@@ -358,7 +358,7 @@ function updateScheduleProfessors(doc) {
         let profData = null;
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             // Error in request
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
@@ -378,7 +378,7 @@ function updateScheduleProfessors(doc) {
                     let stars2 = null;
                     // Check if we have the prof data yet
                     if (!profData) {
-                        profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                        profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                         if (!profData) {
                             profElem2.appendChild(starBlankOut(doc))
                             continue
@@ -403,7 +403,7 @@ function updateScheduleProfessors(doc) {
  * @param {String} courseName The name of the course
  * @param {Number} courseNum The number of the course
  */
-function updateCourseCatalogProfessors(doc, courseName, courseNum) {
+async function updateCourseCatalogProfessors(doc, courseName, courseNum) {
     for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const professorElem = traverseChildren(elem, [0, 6, 0, 0 ]);
         const profName = professorElem.innerText;
@@ -418,7 +418,7 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
         let profData = null;
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
                 continue
@@ -433,7 +433,7 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
                 const profDetailed = traverseChildren(elem2, [0, 0, 1])
                 if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
                     if (!profData) {
-                        profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
+                        profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
                         if (!profData) {
                             profDetailed.appendChild(starBlankOut(doc))
                             continue
@@ -457,7 +457,7 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
  * Updates the professors with stars on the course search page
  * @param {Document} doc The page's document
  */
-function updateCourseSearchProfessors(doc) {
+async function updateCourseSearchProfessors(doc) {
     // Get the name of the 
     const h2Elem = doc.getElementsByTagName("h2")[0]
     const h2SpanElem = h2Elem.getElementsByTagName("span")[0]
@@ -483,7 +483,7 @@ function updateCourseSearchProfessors(doc) {
         let profData = null;
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
                 continue
@@ -514,7 +514,7 @@ function updateCourseSearchProfessors(doc) {
             const profDetailsElem = traverseChildren(detailsBlock, [2])
             if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
-                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])   
+                    profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])   
                     if (!profData) {
                         profDetailsElem.appendChild(starBlankOut(doc))
                         continue
@@ -538,7 +538,7 @@ function updateCourseSearchProfessors(doc) {
  * Updates the professors with stars on the shopping cart page
  * @param {Document} doc 
  */
-function updateShoppingCart(doc) {
+async function updateShoppingCart(doc) {
     for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const professorElem = traverseChildren(elem, [0, 3, 0, 3])
         
@@ -553,7 +553,7 @@ function updateShoppingCart(doc) {
         let profData = null;
 
         if (professorElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
                 continue
@@ -575,7 +575,7 @@ function updateShoppingCart(doc) {
             const detailedInstructorElem = traverseChildren(detailsBlockElem, [2])
             if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
-                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                     if (!profData) {
                         detailedInstructorElem.appendChild(starBlankOut(doc))
                         return
@@ -598,7 +598,7 @@ function updateShoppingCart(doc) {
  * Updates professors with stars on the edit enrollment page
  * @param {Document} doc 
  */
-function updateEditEnrollment(doc) {
+async function updateEditEnrollment(doc) {
     const hrElem = doc.getElementsByTagName("hr")[0]
     const overallElem = nthParent(hrElem, 2)
 
@@ -614,7 +614,7 @@ function updateEditEnrollment(doc) {
         const courseNameParsed = parseCourseName(courseName)
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
-            const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            const profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
                 continue
@@ -637,7 +637,7 @@ function updateEditEnrollment(doc) {
  * Updates professors with stars on the drop classes page
  * @param {Document} doc 
  */
-function updateDropClasses(doc) {
+async function updateDropClasses(doc) {
     for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const profElem = traverseChildren(elem, [0, 2, 0, 4])
         const profName = profElem.innerText
@@ -654,7 +654,7 @@ function updateDropClasses(doc) {
         let profData = null;
 
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
                 continue
@@ -685,7 +685,7 @@ function updateDropClasses(doc) {
             const detailedInstructorElem = traverseChildren(detailsElem, [2])
             if (detailedInstructorElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
-                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                     if (!profData) {
                         detailedInstructorElem.appendChild(starBlankOut(doc))
                         continue
@@ -708,7 +708,7 @@ function updateDropClasses(doc) {
  * Updates professors with stars on the schedule builder select sections page
  * @param {Document} doc 
  */
-function updateSBSelectSections(doc) {
+async function updateSBSelectSections(doc) {
     // Get the header
     const headerElem = doc.getElementsByTagName("h2")[0]
     const courseName = headerElem.innerText.split(" -")[0]
@@ -737,7 +737,7 @@ function updateSBSelectSections(doc) {
         let profData = null;
         
         if (profElem.getElementsByClassName("spp-stars").length < 1) {
-            profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+            profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
                 continue
@@ -760,7 +760,7 @@ function updateSBSelectSections(doc) {
             const profDetailsElem = traverseChildren(courseCollapseElem, [0, 0, 1, 0, 2])
             if (profDetailsElem.getElementsByClassName("spp-stars").length < 1) {
                 if (!profData) {
-                    profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                    profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                     if (!profData) {
                         profDetailsElem.appendChild(starBlankOut(doc))
                         continue
@@ -783,7 +783,7 @@ function updateSBSelectSections(doc) {
  * Updates professors with stars on the schedule builder schedule and favorites page
  * @param {Document} doc 
  */
-function updateSBSchedules(doc) {
+async function updateSBSchedules(doc) {
     // Check to make sure the dialogue box is open
     const dialogueElems = doc.getElementsByClassName("cx-MuiDialog-container")
     if (dialogueElems.length > 0) {
@@ -809,7 +809,7 @@ function updateSBSchedules(doc) {
             const profNameParsed = parseProfessorName(profName)
 
             if (profElem.getElementsByClassName("spp-stars").length < 1) {
-                const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                const profData = await getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                 if (!profData) {
                     profElem.appendChild(starBlankOut(doc))
                     continue
