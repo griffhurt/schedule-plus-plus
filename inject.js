@@ -340,7 +340,7 @@ function getPageName(doc) {
  * @param {Document} doc The document of the page
  */
 function updateScheduleProfessors(doc) {
-    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const courseElem = traverseChildren(elem, [0, 0, 0, 0])
         const profElem = traverseChildren(elem, [0, 0, 0, 2, 0, 0, 0])
 
@@ -351,7 +351,7 @@ function updateScheduleProfessors(doc) {
         
         // Die out if we can't get the prof's name or the course name
         if (!profNameParsed || !courseNameParsed) {
-            return
+            continue
         }
 
         // Holder for professor data
@@ -362,7 +362,7 @@ function updateScheduleProfessors(doc) {
             // Error in request
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
             const stars = createStarElement(doc, profData.overall.quality);
             profElem.appendChild(stars)
@@ -370,9 +370,9 @@ function updateScheduleProfessors(doc) {
 
         // Get expanded box
         const expanded = nthParent(elem, 3).getElementsByClassName("cx-MuiGrid-root css-f5ek5k p-3 m-0 position-relative h-100 w-100  cx-MuiGrid-container cx-MuiGrid-align-content-xs-flex-start")
-        Array.from(expanded).forEach(elem => {
-            if (traverseChildren(elem, [0]).innerText.toLowerCase() == "details") {
-                const profElem2 = traverseChildren(elem, [2])
+        for (let elem2 of expanded) {
+            if (traverseChildren(elem2, [0]).innerText.toLowerCase() == "details") {
+                const profElem2 = traverseChildren(elem2, [2])
                 if (profElem2.getElementsByClassName("spp-stars").length < 1) {
                     // Holder variable for stars2
                     let stars2 = null;
@@ -381,7 +381,7 @@ function updateScheduleProfessors(doc) {
                         profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                         if (!profData) {
                             profElem2.appendChild(starBlankOut(doc))
-                            return
+                            continue
                         }
                     }
                     // Check to see if we have course data or not
@@ -393,8 +393,8 @@ function updateScheduleProfessors(doc) {
                     profElem2.appendChild(stars2)
                 }
             }
-        })
-    })
+        }
+    }
 }
 
 /**
