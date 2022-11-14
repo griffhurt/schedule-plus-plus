@@ -31,6 +31,7 @@ In Firefox, go to [about:debugging#/runtime/this-firefox](about:debugging#/runti
 ## Features
 Currently, the extension adds visible RateMyProfessors scores to PeopleSoft on the following pages:
 * Schedule
+* Course Catalog
 * Class Search
 * Shopping Cart
 * Edit Enrollment
