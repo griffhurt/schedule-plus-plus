@@ -714,16 +714,24 @@ function updateSBSelectSections(doc) {
     const courseName = headerElem.innerText.split(" -")[0]
     const courseNameParsed = parseCourseName(courseName)
 
+    if (!courseNameParsed) {
+        return
+    }
+
     // Find the horizontal break on the page
     const hrElem = doc.getElementsByTagName("hr")[0]
     const sectionsListElem = nthParent(hrElem, 4)
     // Get the courses
     const coursesElem = traverseChildren(sectionsListElem, [1, 0])
 
-    Array.from(coursesElem.childNodes).forEach(elem => {
+    for (let elem of coursesElem.childNodes) {
         const profElem = traverseChildren(elem, [0, 0, 0, 0, 5, 0, 0])
         const profName = profElem.innerText
         const profNameParsed = parseProfessorName(profName)
+
+        if (!profNameParsed) {
+            continue
+        }
         
         // Holder variable for professor data
         let profData = null;
@@ -732,7 +740,7 @@ function updateSBSelectSections(doc) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
 
             const starElem = createStarElement(doc, profData.overall.quality);
@@ -755,7 +763,7 @@ function updateSBSelectSections(doc) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                     if (!profData) {
                         profDetailsElem.appendChild(starBlankOut(doc))
-                        return
+                        continue
                     }
                 }
                 // Create the stars
@@ -768,7 +776,7 @@ function updateSBSelectSections(doc) {
                 profDetailsElem.appendChild(stars2)
             }
         }
-    })
+    }
 }
 
 /**
