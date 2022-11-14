@@ -1,6 +1,11 @@
-// API function
+// API functions
 
-
+/**
+ * Looks up the stored ID information for a professor
+ * @param {String} firstName 
+ * @param {String} lastName 
+ * @returns The data stored about the professor
+ */
 function lookUpProfessorStoredData(firstName, lastName) {
     const name = lastName.toLowerCase() + "-" + firstName.toLowerCase()
 
