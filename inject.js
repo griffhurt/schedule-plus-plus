@@ -47,9 +47,11 @@ window.setInterval(() => {
  */
 async function getProfessorData(firstName, lastName, courseName, courseNum) {
     console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
+    /*
     if (Math.random() > 0.5) {
         return null
     }
+    */
     return {
         id: Math.floor(Math.random() * 10000),
         overall: {
