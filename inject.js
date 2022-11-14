@@ -404,14 +404,14 @@ function updateScheduleProfessors(doc) {
  * @param {Number} courseNum The number of the course
  */
 function updateCourseCatalogProfessors(doc, courseName, courseNum) {
-    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const professorElem = traverseChildren(elem, [0, 6, 0, 0 ]);
         const profName = professorElem.innerText;
         const profNameParsed = parseProfessorName(profName)
         
         // Ensure we can parse the prof's name
         if (!profNameParsed) {
-            return
+            continue
         }
 
         // Holder for prof data
@@ -421,14 +421,14 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
             const starElem = createStarElement(doc, profData.overall.quality);
             professorElem.appendChild(starElem);
         }
 
         const infoBlocks = nthParent(professorElem, 7).getElementsByTagName("dl");
-        Array.from(infoBlocks).forEach(elem2 => {
+        for (let elem2 of infoBlocks) {
             if (elem2.innerText.includes("Instructor:")) {
                 const profDetailed = traverseChildren(elem2, [0, 0, 1])
                 if (profDetailed.getElementsByClassName("spp-stars").length < 1) {
@@ -436,7 +436,7 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
                         profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseName, courseNum)
                         if (!profData) {
                             profDetailed.appendChild(starBlankOut(doc))
-                            return
+                            continue
                         }
                     }
                     // Holder variable for stars2
@@ -449,8 +449,8 @@ function updateCourseCatalogProfessors(doc, courseName, courseNum) {
                     profDetailed.appendChild(stars2)
                 }
             }
-        })
-    })
+        }
+    }
 }
 
 /**
