@@ -539,7 +539,7 @@ function updateCourseSearchProfessors(doc) {
  * @param {Document} doc 
  */
 function updateShoppingCart(doc) {
-    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const professorElem = traverseChildren(elem, [0, 3, 0, 3])
         
         const profName = professorElem.innerText
@@ -556,7 +556,7 @@ function updateShoppingCart(doc) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
             const starElem = createStarElement(doc, profData.overall.quality);
             professorElem.appendChild(starElem)
@@ -591,8 +591,7 @@ function updateShoppingCart(doc) {
                 detailedInstructorElem.appendChild(stars2)
             }
         }
-
-    })
+    }
 }
 
 /**
