@@ -17,13 +17,7 @@ function lookUpProfessorStoredData(firstName, lastName) {
         }
     });
 
-    if (profData.length == 0) {
-        return null
-    } else if (profData.length == 1) {
-        return profData[0]
-    } else {
-        return profData
-    }
+    return profData
 }
 
 /**
@@ -103,6 +97,7 @@ async function getRMPData(proxy, url, username, password, id) {
         const rParsed = {
             // I'm not sure which one to use, so I'll just average it
             quality: ((r.node.clarityRating + r.node.helpfulRating) / 2),
+            difficulty: r.node.difficultyRating,
             course: {
                 name: cNameParsed[0],
                 num: cNameParsed[1]
@@ -119,33 +114,124 @@ async function getRMPData(proxy, url, username, password, id) {
 }
 
 /**
+ * Adds a caching system on getRMPData so responses are quicker
+ * @param {String} id The ID of the professor
+ * @param {*} proxy The URL of the CORS proxy
+ * @param {*} url The URL of RMP's GraphQL API
+ * @param {*} username The username for the API
+ * @param {*} password The password for the API
+ * @returns {Object | null} Data about the professor or null on error
+ */
+async function getRMPDataCached(id, proxy, url, username, password) {
+    // Check to see if we've previously cached the professor
+    let cacheResult = localStorage.getItem(`spp-${id}`)
+    if (cacheResult) {
+        // If so, parse the cache
+        cacheResult = JSON.parse(cacheResult)
+        // Make sure it's not expired
+        if (cacheResult.expires > Date.now()) {
+            return cacheResult.data
+        } else {
+            // If expired, refresh
+            const dat = await getRMPData(proxy, url, username, password, id)
+            if (!dat) {
+                return null
+            }
+            const dat_cache = {
+                data: dat,
+                expires: (Date.now() + 86400000)
+            }
+            localStorage.setItem(`spp-${id}`, JSON.stringify(dat_cache))
+            return dat
+        }
+    } else {
+        // Get the data from RMP, cache it, and return it
+        const dat = await getRMPData(proxy, url, username, password, id)
+        if (!dat) {
+            return null
+        }
+        const dat_cache = {
+            data: dat,
+            expires: (Date.now() + 86400000)
+        }
+        localStorage.setItem(`spp-${id}`, JSON.stringify(dat_cache))
+        return dat
+    }
+}
+
+/**
+ * Gets averages for a course from professor data
+ * @param {Object[]} ratingData The ratings obtained from RMP
+ * @param {String} courseName The name of the course
+ * @param {Number} courseNum The number of the course
+ * @returns {Number[]} Average quality followed by average difficulty
+ */
+function getCourseAverages(ratingData, courseName, courseNum) {
+    let courseRatings = [];
+    for (let r of ratingData) {
+        if (r.course.name == courseName && r.course.num == courseNum) {
+            courseRatings.push(r)
+        }
+    }
+    if (courseRatings.length < 5) {
+        return null
+    }
+    let qualitySum = 0.0;
+    let difficultySum = 0.0;
+    for (let r of courseRatings) {
+        qualitySum += r.quality
+        difficultySum += r.difficulty
+    }
+    const qualityAvg = qualitySum / courseRatings.length;
+    const difficultyAvg = difficultySum / courseRatings.length;
+
+    return [qualityAvg, difficultyAvg]
+}
+
+/**
  * Retrieves information about the professor and course from RMP
- * CURRENTLY A STAND-IN
  * @param {String} firstName The professor's first name
  * @param {String} lastName The professor's last name
  * @param {String} courseName The course's name (ex. CS or MUSIC)
  * @param {Number} courseNum The course's number (ex. 441 or 1443)
+ * @param {String} [proxy] The URL of the CORS proxy to use
+ * @param {String} [url] The URL of RMP's GraphQL API
+ * @param {String} [username] The username for RMP's API
+ * @param {String} [password] The password for RMP's API
  * @returns {Object} Information about the overall and course ratings
  */
-async function getProfessorData(firstName, lastName, courseName, courseNum) {
-    // Check if we need to load in the data and download accordingly
-    
+async function getProfessorData(firstName, lastName, courseName, courseNum, proxy=SPP_CORS_PROXY, url=SPP_GRAPHQL_LINK, username=SPP_USERNAME, password=SPP_PASSWORD) {
     console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
-    /*
-    if (Math.random() > 0.5) {
-        return null
-    }
-    */
-    return {
-        id: Math.floor(Math.random() * 10000),
-        overall: {
-            difficulty: Math.random() * 5,
-            quality: Math.random() * 5
-        },
-        course: {
-            data: true,
-            difficulty: Math.random() * 5,
-            quality: Math.random() * 5
+    
+    // Look up the professor in the local db
+    const prof_stored = lookUpProfessorStoredData(firstName, lastName)
+    // Check if we got lucky with a single prof
+    if (prof_stored.length == 1) {
+        const prof_id = prof_stored[0].id
+        // Get the data about the professor
+        const prof_data = await getRMPDataCached(prof_id, proxy, url, username, password)
+        if (!prof_data) {
+            return null;
         }
+        let toReturn = {
+            id: prof_stored[0].legacyId,
+            overall: {
+                difficulty: prof_data.avgDifficulty,
+                quality: prof_data.avgRating
+            },
+            course: {
+                data: false
+            }
+        }
+        // See if there's course data
+        const courseAvgs = getCourseAverages(prof_data.ratings, courseName, courseNum)
+        if (courseAvgs) {
+            toReturn.course.data = true
+            toReturn.course.quality = courseAvgs[0]
+            toReturn.course.difficulty = courseAvgs[1]
+        }
+        return toReturn
+    } else {
+        return null
     }
 }
