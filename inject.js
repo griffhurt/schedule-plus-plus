@@ -6,6 +6,7 @@ const inject = () => {
     const scripts = [
         // Data
         b.runtime.getURL("data/professorData.js"),
+        b.runtime.getURL("data/queries.js"),
         b.runtime.getURL("data/config.js"),
         // Scripts
         b.runtime.getURL("scripts/creators.js"),
