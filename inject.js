@@ -602,7 +602,7 @@ function updateEditEnrollment(doc) {
     const hrElem = doc.getElementsByTagName("hr")[0]
     const overallElem = nthParent(hrElem, 2)
 
-    Array.from(overallElem.childNodes).slice(2).forEach(elem => {
+    for (let elem of Array.from(overallElem.childNodes).slice(2)) {
         const rowElem = traverseChildren(elem, [0, 0, 0])
 
         const profElem = traverseChildren(rowElem, [2, 0, 3])
@@ -617,7 +617,7 @@ function updateEditEnrollment(doc) {
             const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
             
             const starElem = createStarElement(doc, profData.overall.quality);
@@ -630,7 +630,7 @@ function updateEditEnrollment(doc) {
             externalDiv.appendChild(profElem)
             externalDiv.appendChild(starElem)
         }
-    })
+    }
 }
 
 /**
