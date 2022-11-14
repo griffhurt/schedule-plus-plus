@@ -27,6 +27,36 @@ function lookUpProfessorStoredData(firstName, lastName) {
 }
 
 /**
+ * Makes a GraphQL request through a CORS proxy
+ * @param {String} proxy The URL for the CORS proxy
+ * @param {String} url The URL for the GraphQL endpoint
+ * @param {String} username The username for GraphQL auth
+ * @param {String} password The password for GraphQL auth
+ * @param {String} query The GraphQL query
+ * @param {Object} variables The GraphQL variables
+ * @returns {Object | null} The response of the server or null if failed
+ */
+async function makeProxiedGraphQLQuery(proxy, url, username, password, query, variables) {
+    try {
+        // Make the request
+        const r = await fetch(`${proxy}${url}`, {
+            method: "POST",
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            }),
+            headers: {
+                'Authorization': "Basic " + btoa(username + ":" + password)
+            }
+        })
+        // Return the response 
+        return (await r.json())
+    } catch (e) {
+        return null
+    }
+}
+
+/**
  * Retrieves information about the professor and course from RMP
  * CURRENTLY A STAND-IN
  * @param {String} firstName The professor's first name
