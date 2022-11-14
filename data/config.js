@@ -1,7 +1,7 @@
 // Configuration File
 
 // The link to the CORS proxy being used
-const SPP_CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
+const SPP_CORS_PROXY = "https://spp.griffinhurt.com/"
 // The link to RMP's GraphQL API
 const SPP_GRAPHQL_LINK = "https://www.ratemyprofessors.com/graphql"
 
