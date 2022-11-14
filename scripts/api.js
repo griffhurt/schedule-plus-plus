@@ -57,6 +57,68 @@ async function makeProxiedGraphQLQuery(proxy, url, username, password, query, va
 }
 
 /**
+ * Parses the name of a course from an RMP review
+ * @param {String} courseName 
+ * @returns {Array} The course's name followed by its number/
+ */
+function parseRMPCourseName(courseName) {
+    const m = courseName.match(/([A-Z]+)(\d+)/)
+    if (!m) {
+        return null
+    }
+    const courseNameParsed = m[1]
+    const courseNumParsed = parseInt(m[2])
+
+    return [courseNameParsed, courseNumParsed]
+}
+
+/**
+ * Requests professor data from Rate My Professor's API
+ * @param {String} proxy 
+ * @param {String} url 
+ * @param {String} username 
+ * @param {String} password 
+ * @param {String} id 
+ * @returns {Object} Data about the professor and their ratings
+ */
+async function getRMPData(proxy, url, username, password, id) {
+    // Make the graphQL request
+    const resp = await makeProxiedGraphQLQuery(proxy, url, username, password, SPP_QUERY_GET_RATINGS, {
+        id: id
+    })
+    if (!resp) {
+        return null;
+    }
+    // Parse the ratings
+    const ratings = [];
+    let courses = [];
+    for (let r of resp.data.node.ratings.edges) {
+        const cNameParsed = parseRMPCourseName(r.node.class)
+        if (!cNameParsed) {
+            continue
+        }
+        if (!courses.includes(`${cNameParsed[0]}${cNameParsed[1]}`)) {
+            courses.push(`${cNameParsed[0]}${cNameParsed[1]}`)
+        }
+        const rParsed = {
+            // I'm not sure which one to use, so I'll just average it
+            quality: ((r.node.clarityRating + r.node.helpfulRating) / 2),
+            course: {
+                name: cNameParsed[0],
+                num: cNameParsed[1]
+            }
+        }
+        ratings.push(rParsed)
+    }
+    return {
+        avgRating: resp.data.node.avgRating,
+        avgDifficulty: resp.data.node.avgDifficulty,
+        ratings: ratings,
+        courses: courses
+    }
+}
+
+/**
  * Retrieves information about the professor and course from RMP
  * CURRENTLY A STAND-IN
  * @param {String} firstName The professor's first name
