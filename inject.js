@@ -638,7 +638,7 @@ function updateEditEnrollment(doc) {
  * @param {Document} doc 
  */
 function updateDropClasses(doc) {
-    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const profElem = traverseChildren(elem, [0, 2, 0, 4])
         const profName = profElem.innerText
         const profNameParsed = parseProfessorName(profName)
@@ -648,7 +648,7 @@ function updateDropClasses(doc) {
         const courseNameParsed = parseCourseName(courseName)
 
         if (!profNameParsed | !courseNameParsed) {
-            return
+            continue
         }
 
         let profData = null;
@@ -657,7 +657,7 @@ function updateDropClasses(doc) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 profElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
 
             const starElem = createStarElement(doc, profData.overall.quality);
@@ -676,7 +676,7 @@ function updateDropClasses(doc) {
         for (let elem2 of overallElem.getElementsByTagName("h3")) {
             if (elem2.innerText.includes("DETAILS")) {
                 detailsLabelElem = elem2
-                break
+                continue
             }
         }
 
@@ -688,7 +688,7 @@ function updateDropClasses(doc) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
                     if (!profData) {
                         detailedInstructorElem.appendChild(starBlankOut(doc))
-                        return
+                        continue
                     }
                 }
                 // Create the stars
@@ -701,7 +701,7 @@ function updateDropClasses(doc) {
                 detailedInstructorElem.appendChild(stars2)
             }
         }
-    })
+    }
 }
 
 /**
