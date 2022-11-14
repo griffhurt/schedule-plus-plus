@@ -6,16 +6,15 @@
     
     "content_scripts": [
         {
-            "js": ["scripts/inject.js"], 
+            "js": ["inject.js"], 
             "matches": [
                 "https://prd.ps.pitt.edu/*"
             ]
         }
     ],
-
     "web_accessible_resources": [
         {
-            "resources": ["data/professors.json"],
+            "resources": ["scripts/*", "data/*"],
             "matches": [
                 "https://prd.ps.pitt.edu/*"
             ]
