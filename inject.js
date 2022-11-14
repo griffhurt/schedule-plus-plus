@@ -468,7 +468,7 @@ function updateCourseSearchProfessors(doc) {
         return
     }
 
-    doc.querySelectorAll('[id$="-summary"]').forEach(elem => {
+    for (let elem of doc.querySelectorAll('[id$="-summary"]')) {
         const professorElem = traverseChildren(elem, [0, 1, 0, 3, 0, 0, 0, 4]);
 
         const profName = professorElem.innerText
@@ -476,7 +476,7 @@ function updateCourseSearchProfessors(doc) {
 
         // Die out if professor name not parsed
         if (!profNameParsed) {
-            return
+            continue
         }
         
         // Holder variable for professor data
@@ -486,7 +486,7 @@ function updateCourseSearchProfessors(doc) {
             profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
             if (!profData) {
                 professorElem.appendChild(starBlankOut(doc))
-                return
+                continue
             }
 
             const starElem = createStarElement(doc, profData.overall.quality);
@@ -517,7 +517,7 @@ function updateCourseSearchProfessors(doc) {
                     profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])   
                     if (!profData) {
                         profDetailsElem.appendChild(starBlankOut(doc))
-                        return
+                        continue
                     }
                 }
 
@@ -531,7 +531,7 @@ function updateCourseSearchProfessors(doc) {
                 profDetailsElem.appendChild(stars2)
             }
         }
-    })
+    }
 }
 
 /**
