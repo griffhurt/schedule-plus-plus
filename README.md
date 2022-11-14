@@ -14,6 +14,7 @@ You can download the pre-packaged extension from the "Releases" tab to the right
 In Chrome, navigate to [chrome://extensions/](chrome://extensions/), turn on "Developer mode" with the switch in the top right corner of the page, and drag the `schedule-plus-plus_XX.XX.XX.crx` file onto the page.
 
 *Warning: Firefox is currently unsupported.*
+
 In Firefox, navigate to [about:addons](about:addons), press the gear in the top right corner, click "Install Add-on From File...", and select the `schedule-plus-plus_XX.XX.XX.xpi` file.
 
 *We are currently working on distributing Schedule++ on the Chrome and Firefox extension stores.*
