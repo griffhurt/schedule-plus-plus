@@ -1,10 +1,12 @@
-// Injects the javascript files
+// Injects the JavaScript files for the extension
 
 const inject = () => {
     let b = (typeof browser === "undefined") ? chrome : browser
 
     const scripts = [
+        // Data
         b.runtime.getURL("data/professorData.js"),
+        // Scripts
         b.runtime.getURL("scripts/creators.js"),
         b.runtime.getURL("scripts/helpers.js"),
         b.runtime.getURL("scripts/updaters.js"),
