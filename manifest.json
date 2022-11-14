@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Schedule++",
     "version": "1.0",
     "description": "Adds additional features to University of Pittsburgh scheduling in PeopleSoft.",
@@ -12,12 +12,5 @@
             ]
         }
     ],
-    "web_accessible_resources": [
-        {
-            "resources": ["scripts/*", "data/*"],
-            "matches": [
-                "https://prd.ps.pitt.edu/*"
-            ]
-        }
-    ]
+    "web_accessible_resources": ["scripts/*", "data/*"]
 }
