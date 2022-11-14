@@ -802,33 +802,36 @@ function updateSBSchedules(doc) {
         if (instructorLabelElems.length == 0) {
             return
         }
-        instructorLabelElems.forEach(elem => {
+
+        for (let elem of instructorLabelElems) {
             const profElem = elem.parentNode.childNodes[1]
             const profName = profElem.innerText
             const profNameParsed = parseProfessorName(profName)
 
-            const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
-            if (!profData) {
-                profElem.appendChild(starBlankOut(doc))
-                return
-            }
+            if (profElem.getElementsByClassName("spp-stars").length < 1) {
+                const profData = getProfessorData(profNameParsed[0], profNameParsed[1], courseNameParsed[0], courseNameParsed[1])
+                if (!profData) {
+                    profElem.appendChild(starBlankOut(doc))
+                    continue
+                }
 
-            let starElem = null;
-            if (profData.course.data) {
-                starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
-            } else {
-                starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
-            }
+                let starElem = null;
+                if (profData.course.data) {
+                    starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty, profData.course.quality, profData.course.difficulty);
+                } else {
+                    starElem = createDetailedStarElement(doc, profData.id, profData.overall.quality, profData.overall.difficulty);
+                }
 
-            const externalDiv = doc.createElement("div")
-            
-            // Replace the child with the external div
-            profElem.parentElement.replaceChild(externalDiv, profElem)
-            profElem.className = "";
-            profElem.removeAttribute('style');
-            profElem.style.marginInlineStart = "0";
-            externalDiv.appendChild(profElem)
-            externalDiv.appendChild(starElem)
-        });
+                const externalDiv = doc.createElement("div")
+                
+                // Replace the child with the external div
+                profElem.parentElement.replaceChild(externalDiv, profElem)
+                profElem.className = "";
+                profElem.removeAttribute('style');
+                profElem.style.marginInlineStart = "0";
+                externalDiv.appendChild(profElem)
+                externalDiv.appendChild(starElem)
+            }
+        }
     }
 }
