@@ -1,4 +1,4 @@
-![Schedule++ Logo](/img/extensionLogoOutline.png)
+![Schedule++ Logo](/img/spp_logo.png)
 # Schedule++
 A browser extension that adds additional features to college scheduling.
 
