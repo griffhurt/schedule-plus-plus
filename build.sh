@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Create the build folder
-mkdir build
+mkdir -p build
 
 # Make the Firefox and Chrome build folders
-mkdir build/firefox
-mkdir build/chrome
+mkdir -p build/firefox
+mkdir -p build/chrome
 
 # Copy the right version of manifest
 cp manifest.v2.json build/firefox/manifest.json
