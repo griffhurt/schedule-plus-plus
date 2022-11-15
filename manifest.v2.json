@@ -3,7 +3,12 @@
     "name": "Schedule++",
     "version": "0.1",
     "description": "Adds additional features to University of Pittsburgh scheduling in PeopleSoft.",
-    
+    "icons": {
+        "16": "icon/spp_logo_16.png",
+        "32": "icon/spp_logo_32.png",
+        "64": "icon/spp_logo_64.png",
+        "128": "icon/spp_logo_128.png"
+    },
     "content_scripts": [
         {
             "js": ["inject.js"], 
