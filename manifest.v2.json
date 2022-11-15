@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Schedule++",
     "version": "0.1",
-    "description": "Adds additional features to University of Pittsburgh scheduling in PeopleSoft.",
+    "description": "Adds additional features to college scheduling portals.",
     "icons": {
         "16": "icon/spp_logo_16.png",
         "32": "icon/spp_logo_32.png",
