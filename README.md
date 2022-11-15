@@ -22,12 +22,22 @@ In Firefox, navigate to [about:addons](about:addons), press the gear in the top 
 ### Loading from Source
 
 First, clone this repository locally:
-> `git clone https://github.com/griffhurt/schedule-plus-plus.git`
+```
+git clone https://github.com/griffhurt/schedule-plus-plus.git
+```
 
-In Chrome, go to [chrome://extensions/](chrome://extensions/), turn on "Developer mode" with the switch in the top right corner of the page, press "Load unpacked", and select the `schedule-plus-plus` folder.
+Next, build the extension:
 
-*Warning: Firefox is currently unsupported.*
-In Firefox, go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox), press "Load Temporary Add-on...", and select the `schedule-plus-plus` folder.
+For Mac/Linux:
+```
+cd schedule-plus-plus
+chmod +x build.sh
+./build.sh
+```
+
+In Chrome, go to [chrome://extensions/](chrome://extensions/), turn on "Developer mode" with the switch in the top right corner of the page, press "Load unpacked", and select the `schedule-plus-plus/build/chrome` folder.
+
+In Firefox, go to [about:debugging#/runtime/this-firefox](about:debugging#/runtime/this-firefox), press "Load Temporary Add-on...", and select the `schedule-plus-plus/build/firefox/manifest.json` file.
 
 ## Features
 Currently, the extension adds visible RateMyProfessors scores to PeopleSoft on the following pages:
