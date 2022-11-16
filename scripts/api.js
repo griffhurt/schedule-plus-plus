@@ -200,9 +200,7 @@ function getCourseAverages(ratingData, courseName, courseNum) {
  * @param {String} [password] The password for RMP's API
  * @returns {Object} Information about the overall and course ratings
  */
-async function getProfessorData(firstName, lastName, courseName, courseNum, proxy=SPP_CORS_PROXY, url=SPP_GRAPHQL_LINK, username=SPP_USERNAME, password=SPP_PASSWORD) {
-    console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
-    
+async function getProfessorData(firstName, lastName, courseName, courseNum, proxy=SPP_CORS_PROXY, url=SPP_GRAPHQL_LINK, username=SPP_USERNAME, password=SPP_PASSWORD) {    
     // Look up the professor in the local db
     const prof_stored = lookUpProfessorStoredData(firstName, lastName)
     // Check if we got lucky with a single prof
@@ -225,6 +223,43 @@ async function getProfessorData(firstName, lastName, courseName, courseNum, prox
         }
         // See if there's course data
         const courseAvgs = getCourseAverages(prof_data.ratings, courseName, courseNum)
+        if (courseAvgs) {
+            toReturn.course.data = true
+            toReturn.course.quality = courseAvgs[0]
+            toReturn.course.difficulty = courseAvgs[1]
+        }
+        return toReturn
+    } else if (prof_stored.length > 1) {
+        // Multiple professors with the same name
+        // Allocate a variable for the selected professor
+        let selected_prof = null
+        // Check each professor
+        for (let prof of prof_stored) {
+            // Get the data about the professor
+            const prof_data = await getRMPDataCached(prof.id, proxy, url, username, password)
+            // Check if the professor teaches the course
+            if (prof_data.courses.includes(`${courseName.toUpperCase()}${courseNum}`)) {
+                selected_prof = prof_data;
+                selected_prof.legacyId = prof.legacyId;
+                break
+            }
+        }
+        // If we still haven't found the professor
+        if (!selected_prof) {
+            return null;
+        }
+        let toReturn = {
+            id: selected_prof.legacyId,
+            overall: {
+                difficulty: selected_prof.avgDifficulty,
+                quality: selected_prof.avgRating
+            },
+            course: {
+                data: false
+            }
+        }
+        // See if there's course data
+        const courseAvgs = getCourseAverages(selected_prof.ratings, courseName, courseNum)
         if (courseAvgs) {
             toReturn.course.data = true
             toReturn.course.quality = courseAvgs[0]
