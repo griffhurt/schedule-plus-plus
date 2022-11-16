@@ -3,6 +3,11 @@
 
 [![Download for Firefox](/img/download_firefox.png)](https://addons.mozilla.org/en-US/firefox/addon/schedule-plus-plus/)
 
+[![Commit Activity](https://img.shields.io/github/commit-activity/m/griffhurt/schedule-plus-plus)](https://github.com/griffhurt/schedule-plus-plus/commits/master)
+[![Issues](https://img.shields.io/github/issues/griffhurt/schedule-plus-plus)](https://github.com/griffhurt/schedule-plus-plus/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/griffhurt/schedule-plus-plus)](https://github.com/griffhurt/schedule-plus-plus/pulls)
+[![Firefox Addon](https://img.shields.io/amo/v/schedule-plus-plus) ![Firefox Downloads](https://img.shields.io/amo/dw/schedule-plus-plus) ![Firefox Users](https://img.shields.io/amo/users/schedule-plus-plus)](https://addons.mozilla.org/en-US/firefox/addon/schedule-plus-plus/)
+
 A browser extension that adds additional features to college scheduling.
 
 Written by: Griffin Hurt (griffhurt), Joe Altvater (jca64), and Carson Gollinger (nosra)
