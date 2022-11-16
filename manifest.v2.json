@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Schedule++",
-    "version": "0.2",
+    "version": "0.3",
     "description": "Adds additional features to college scheduling portals.",
     "icons": {
         "16": "icon/spp_logo_16.png",
@@ -17,5 +17,5 @@
             ]
         }
     ],
-    "web_accessible_resources": ["scripts/*", "data/*"]
+    "web_accessible_resources": ["scripts/*", "spp_data/*"]
 }
