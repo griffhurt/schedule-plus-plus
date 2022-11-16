@@ -200,9 +200,7 @@ function getCourseAverages(ratingData, courseName, courseNum) {
  * @param {String} [password] The password for RMP's API
  * @returns {Object} Information about the overall and course ratings
  */
-async function getProfessorData(firstName, lastName, courseName, courseNum, proxy=SPP_CORS_PROXY, url=SPP_GRAPHQL_LINK, username=SPP_USERNAME, password=SPP_PASSWORD) {
-    console.log("REQUEST: ", firstName, lastName, courseName, courseNum)
-    
+async function getProfessorData(firstName, lastName, courseName, courseNum, proxy=SPP_CORS_PROXY, url=SPP_GRAPHQL_LINK, username=SPP_USERNAME, password=SPP_PASSWORD) {    
     // Look up the professor in the local db
     const prof_stored = lookUpProfessorStoredData(firstName, lastName)
     // Check if we got lucky with a single prof
