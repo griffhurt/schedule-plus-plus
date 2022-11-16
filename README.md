@@ -1,5 +1,8 @@
 ![Schedule++ Logo](/img/spp_logo.png)
 # Schedule++
+
+[![Download for Firefox](/img/download_firefox.png)](https://addons.mozilla.org/en-US/firefox/addon/schedule-plus-plus/)
+
 A browser extension that adds additional features to college scheduling.
 
 Written by: Griffin Hurt (griffhurt), Joe Altvater (jca64), and Carson Gollinger (nosra)
