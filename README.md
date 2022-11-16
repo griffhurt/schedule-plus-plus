@@ -24,7 +24,7 @@ In Chrome, navigate to [chrome://extensions/](chrome://extensions/), turn on "De
 
 In Firefox, navigate to [about:addons](about:addons), press the gear in the top right corner, click "Install Add-on From File...", and select the `schedule-plus-plus_XX.XX.XX.xpi` file.
 
-*We are currently working on distributing Schedule++ on the Chrome and Firefox extension stores.*
+*We are currently working on distributing Schedule++ on the Chrome Extension store.*
 
 ### Loading from Source
 
