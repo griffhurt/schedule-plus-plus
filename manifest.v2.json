@@ -17,5 +17,5 @@
             ]
         }
     ],
-    "web_accessible_resources": ["scripts/*", "data/*"]
+    "web_accessible_resources": ["scripts/*", "spp_data/*"]
 }

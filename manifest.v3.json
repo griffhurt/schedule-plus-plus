@@ -19,7 +19,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["scripts/*", "data/*"],
+            "resources": ["scripts/*", "spp_data/*"],
             "matches": [
                 "https://prd.ps.pitt.edu/*"
             ]
